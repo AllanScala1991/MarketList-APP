@@ -3,8 +3,7 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity} from 'react
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from './config';
 
-
-export default function() {
+export default function(props) {
   const [getuser, setUser] = useState("");
 
   const [getpassword, setPass] = useState("");
@@ -29,8 +28,11 @@ export default function() {
         let json = await response.json();
 
         if (!json.status){
+
             alert(json.message)
+
         }else{
+
             await AsyncStorage.setItem("@token", json.token);
             // CHAMAR A HOME DO APP LOGIN FOI FEITO COM SUCESSO
         }
@@ -41,59 +43,58 @@ export default function() {
     
   }
 
-  const createAccount = () => {
-      // ABRE PAGINA DE CRIAR CONTA
-  }
   return (
-    
-    <View style={styles.container}>
-        <View style={styles.logoContainer}> 
-            <Image
-                source = { require('../assets/logo.png') }
-            />
-            <Text style = { styles.loginText }>Market List</Text>
-        </View>
+        <View style={styles.container}>
+            <View style={styles.logoContainer}> 
+                <Image
+                    source = { require('../assets/logo.png') }
+                />
+                <Text style = { styles.loginText }>Market List</Text>
+            </View>
 
-        <View style = {styles.infoContainer }>
+            <View style = {styles.infoContainer }>
 
-            <TextInput
-                style = { styles.inputs}
-                placeholder = "Insert a user"
-                onChangeText = {text => setUser(text)}
-                value = {getuser}
-            />
-        </View>
+                <TextInput
+                    style = { styles.inputs}
+                    placeholder = "Insert a user"
+                    onChangeText = {text => setUser(text)}
+                    value = {getuser}
+                />
+            </View>
 
-        <View style = {styles.infoContainer }>
-            <TextInput
-                style = { styles.inputs}
-                placeholder = "Insert a password"
-                secureTextEntry={true}
-                onChangeText = {text => setPass(text)}
-                value = {getpassword}
-            />
-        </View>
+            <View style = {styles.infoContainer }>
+                <TextInput
+                    style = { styles.inputs}
+                    placeholder = "Insert a password"
+                    secureTextEntry={true}
+                    onChangeText = {text => setPass(text)}
+                    value = {getpassword}
+                />
+            </View>
 
-        <View style = {styles.buttonContainer}>
-            <TouchableOpacity 
-            style = {styles.button}
-            onPress = {login}
-            >
-                <Text style = {styles.buttonText}>ACESSAR</Text>
-            </TouchableOpacity>
-        </View>
+            <View style = {styles.buttonContainer}>
+                <TouchableOpacity 
+                style = {styles.button}
+                onPress = {login}
+                >
+                    <Text style = {styles.buttonText}>ACESSAR</Text>
+                </TouchableOpacity>
+            </View>
 
-        <View style = {styles.buttonContainer}>
-            <TouchableOpacity style = {styles.button}>
-                <Text style = {styles.buttonText}>CRIAR CONTA</Text>
-            </TouchableOpacity>
+            <View style = {styles.buttonContainer}>
+                <TouchableOpacity 
+                    style = {styles.button}
+                    onPress = {() => props.nav.navigate("WindowRegister")}
+                >
+                    <Text style = {styles.buttonText}>CRIAR CONTA</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-    </View>
-    
   );
 }
 
 const styles = StyleSheet.create({
+    
   container: {
     flex: 1,
     width: '100%',
@@ -115,6 +116,14 @@ const styles = StyleSheet.create({
       textShadowColor: 'black',
       textShadowRadius: 5
   },
+
+  loginTextRegister: {
+    fontSize: 50,
+    fontWeight: 'bold',
+    color: "white",
+    textShadowColor: 'black',
+    textShadowRadius: 5
+},
 
   infoContainer: {
       width: '100%',
@@ -150,8 +159,36 @@ const styles = StyleSheet.create({
       alignItems: 'center',
   },
 
+  buttonRegister: {
+    width: '88%',
+    height: '100%',
+    backgroundColor: '#D8E0F7',
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   buttonText: {
       fontSize: 18,
       color: 'white'
+  },
+
+  buttonTextRegister: {
+    fontSize: 18,
+    color: '#5D3FEB',
+    fontWeight: 'bold'
+  },
+
+  modalRegister: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+  },
+
+  viewModalRegister: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#5D3FEB'
   }
 });
