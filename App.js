@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -7,7 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
-import { func } from 'prop-types';
+import List from './components/List';
+
 
 //NAVIGATION
 const Windows = createStackNavigator();
@@ -36,6 +37,15 @@ function homeRender({navigation}) {
   )
 }
 
+function listRender({route, navigation}) {
+  const {date, id} = route.params;
+  return(
+    <View style={styles.container}>
+      <List params = {{date: date, id: id}}/>
+    </View>
+  )
+}
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -58,6 +68,11 @@ export default function App() {
           <Windows.Screen
               name = "WindowHome"
               component = {homeRender}
+          />
+
+          <Windows.Screen
+              name = "WindowList"
+              component = {listRender}
           />
 
       </Windows.Navigator>

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, Text, Image, FlatList, ActivityIndicator} from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, Image, FlatList, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from './config';
 
@@ -13,7 +13,7 @@ export default function (props) {
     // NESSE CASO FOI USADO O IS LOADING
     useEffect(() => {
         async function fetchData(){
-            const token = await AsyncStorage.getItem('@token');
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUxNzA5NzksImV4cCI6MTYyNTI1NzM3OX0.i6djy2nuZz-l3vsDbUXy17PCbrbPKaNiTRosKsZpHsY" //await AsyncStorage.getItem('@token');
             try {
                 let response = await fetch(
                     `${config.api}/list`,
@@ -21,7 +21,7 @@ export default function (props) {
                         headers: {
                             'Accept': 'application/json',
                             'Content-Type': 'application/json',
-                            'authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUwODY4MzAsImV4cCI6MTYyNTE3MzIzMH0.TTk7tZFBPZJylqbWk1cRo2hacxJ0kNNJOM_QtVRQRU0'}`
+                            'authorization': `Bearer ${token}`
                         },
                         method: 'GET'
                     }
@@ -31,9 +31,9 @@ export default function (props) {
                 let json = await response.json();
         
                 if (!json.status){
-        
                     alert(json.message)
                     setData('');
+
                 }else{
                     setData(json.data);
                 }
@@ -46,6 +46,7 @@ export default function (props) {
     }, [])
 
     const newList = async () => {
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUxNzA5NzksImV4cCI6MTYyNTI1NzM3OX0.i6djy2nuZz-l3vsDbUXy17PCbrbPKaNiTRosKsZpHsY" //await AsyncStorage.getItem('@token');
         const date = new Date();
         let day = date.getDate();
         let month = date.getMonth()
@@ -64,7 +65,7 @@ export default function (props) {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUwODY4MzAsImV4cCI6MTYyNTE3MzIzMH0.TTk7tZFBPZJylqbWk1cRo2hacxJ0kNNJOM_QtVRQRU0'}`
+                        'authorization': `Bearer ${token}`
                     },
                     method: 'POST',
                     body: JSON.stringify({
@@ -87,7 +88,7 @@ export default function (props) {
     }
 
     async function refresh(){
-        const token = await AsyncStorage.getItem('@token');
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUxNzA5NzksImV4cCI6MTYyNTI1NzM3OX0.i6djy2nuZz-l3vsDbUXy17PCbrbPKaNiTRosKsZpHsY"//await AsyncStorage.getItem('@token');
         setLoading(true);
         try {
             let response = await fetch(
@@ -96,7 +97,7 @@ export default function (props) {
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        'authorization': `Bearer ${'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUwODY4MzAsImV4cCI6MTYyNTE3MzIzMH0.TTk7tZFBPZJylqbWk1cRo2hacxJ0kNNJOM_QtVRQRU0'}`
+                        'authorization': `Bearer ${token}`
                     },
                     method: 'GET'
                 }
@@ -117,6 +118,10 @@ export default function (props) {
         } catch (error) {
             alert(error)
         }
+    }
+
+    function acessList(listDate, id){
+        props.nav.navigate("WindowList",{date: listDate, id: id});
     }
 
     return (
@@ -147,8 +152,11 @@ export default function (props) {
                         renderItem = {({ item }) => (
                             <TouchableOpacity
                                 style= {styles.listsButton}
-                            >
+                                onPress = {() => acessList(item.ListDate, item.id)}
+                            >   
+                            
                                 <Text style = {styles.listText}>Data: {item.ListDate}</Text>
+                  
                             </TouchableOpacity>
                         )}
                     />
@@ -166,7 +174,7 @@ const styles = new StyleSheet.create({
         width: '100%',
         height: '100%',
         marginTop: 50,
-        backgroundColor: '#5D3FEB',
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -197,36 +205,35 @@ const styles = new StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        backgroundColor: 'rgba(255,255,255,0.8)',
+        backgroundColor: '#5D3FEB',
         borderRadius: 5
     },
 
     textButton: {
         fontSize: 20,
-        color: '#5D3FEB',
+        color: 'white',
         fontWeight: 'bold',
         padding: 10
     },
 
     listsButton: {
         width: '90%',
-        backgroundColor: 'white',
         margin: 20,
         borderRadius: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        backgroundColor: '#5D3FEB'
     },
 
     listText: {
         fontSize: 18,
-        color: '#5D3FEB',
-        padding: 10,
+        color: 'white',
+        padding: 30,
         fontWeight: 'bold'
     },
 
     flat: {
         width: '100%'
-    }
- 
+    },
 })
