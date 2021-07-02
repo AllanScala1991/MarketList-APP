@@ -34,7 +34,7 @@ export default function(props) {
         }else{
 
             await AsyncStorage.setItem("@token", json.token);
-            // CHAMAR A HOME DO APP LOGIN FOI FEITO COM SUCESSO
+            props.nav.navigate("WindowHome");
         }
 
     } catch (error) {

@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, TouchableOpacity, View, Text, Image, FlatList, ActivityIndicator} from 'react-native';
+import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from './config';
 
@@ -7,13 +8,14 @@ export default function (props) {
 
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const isFocused = useIsFocused();// USADO PARA ATUALIZAR A PAGINA QUANDO VOLTA DE UMA PAGINA PRA ELA
     
 
     // SERVE PARA CARREGAR ALGO AO ENTRAR NA TELA, DEVE TER UM ESTADO INFOMARDO
     // NESSE CASO FOI USADO O IS LOADING
     useEffect(() => {
         async function fetchData(){
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUxNzA5NzksImV4cCI6MTYyNTI1NzM3OX0.i6djy2nuZz-l3vsDbUXy17PCbrbPKaNiTRosKsZpHsY" //await AsyncStorage.getItem('@token');
+            const token = await AsyncStorage.getItem('@token');
             try {
                 let response = await fetch(
                     `${config.api}/list`,
@@ -31,7 +33,6 @@ export default function (props) {
                 let json = await response.json();
         
                 if (!json.status){
-                    alert(json.message)
                     setData('');
 
                 }else{
@@ -43,10 +44,10 @@ export default function (props) {
             }
         }
         fetchData();
-    }, [])
+    }, [isFocused])
 
     const newList = async () => {
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUxNzA5NzksImV4cCI6MTYyNTI1NzM3OX0.i6djy2nuZz-l3vsDbUXy17PCbrbPKaNiTRosKsZpHsY" //await AsyncStorage.getItem('@token');
+        const token = await AsyncStorage.getItem('@token');
         const date = new Date();
         let day = date.getDate();
         let month = date.getMonth()
@@ -88,7 +89,7 @@ export default function (props) {
     }
 
     async function refresh(){
-        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUxNzA5NzksImV4cCI6MTYyNTI1NzM3OX0.i6djy2nuZz-l3vsDbUXy17PCbrbPKaNiTRosKsZpHsY"//await AsyncStorage.getItem('@token');
+        const token = await AsyncStorage.getItem('@token');
         setLoading(true);
         try {
             let response = await fetch(

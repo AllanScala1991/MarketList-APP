@@ -1,19 +1,21 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, Alert} from 'react-native';
+import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from './config';
 /*
-- CRIAR AS FUNCIONALIDADES DO BOTAO DO HEADER
 - FUNCIONALIZADA DE CADASTRAR UM ITEM NA LISTA
 - FUNCIONALIDADE DE EXCLUIR UM ITEM DA LISTA
 */
 export default function (props) {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const isFocused = useIsFocused();// USADO PARA ATUALIZAR A PAGINA QUANDO VOLTA DE UMA PAGINA PRA ELA
+    const [modal, setModal] = useState(false)
 
     useEffect(() => {
         async function fetchData(){
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MjUxNzA5NzksImV4cCI6MTYyNTI1NzM3OX0.i6djy2nuZz-l3vsDbUXy17PCbrbPKaNiTRosKsZpHsY" //await AsyncStorage.getItem('@token');
+            const token = await AsyncStorage.getItem('@token');
             try {
                 let response = await fetch(
                     `${config.api}/items`,
@@ -33,10 +35,7 @@ export default function (props) {
         
                 let json = await response.json();
         
-                if (!json.status){
-                    alert(json.message)
-
-                }else{
+                if (json.status){
                     setData(json.data);
                 }
 
@@ -45,8 +44,100 @@ export default function (props) {
             }
         }
         fetchData();
-    }, [])
+    }, [isFocused]);
 
+    async function deleteDate(){
+        const token = await AsyncStorage.getItem('@token');
+        try {
+            let response = await fetch(
+                `${config.api}/list`,
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${token}`
+                    },
+                    method: 'DELETE',
+                    body: JSON.stringify({
+                        id: props.params.id
+                    })
+                }
+            );
+
+            let json = await response.json();
+    
+            alert(json.message);
+
+            props.params.nav.navigate("WindowHome");
+    
+        } catch (error) {
+            alert(error);
+        }
+    };
+
+    async function deleteItem(id){
+        const token = await AsyncStorage.getItem('@token');
+        try {
+            let response = await fetch(
+                `${config.api}/item`,
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${token}`
+                    },
+                    method: 'DELETE',
+                    body: JSON.stringify({
+                        id: id
+                    })
+                }
+            );
+
+            let json = await response.json();
+    
+            alert(json.message);
+
+            refresh();
+    
+        } catch (error) {
+            alert(error);
+        }
+    };
+
+    async function refresh(){
+        const token = await AsyncStorage.getItem('@token');
+        setLoading(true);
+        try {
+            let response = await fetch(
+                `${config.api}/items`,
+                {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${token}`
+                    },
+                    method: 'POST',
+                    body: JSON.stringify({
+                        dateList: props.params.date
+                    })
+                }
+            )
+            .finally(() => setLoading(false));
+    
+            let json = await response.json();
+    
+            if (!json.status){
+                setData('');
+            }else{
+                setData(json.data);
+                setLoading(false)
+            }
+
+        } catch (error) {
+            alert(error)
+        }
+    };
+    
     return(
         <View style = {styles.container}>
             <View style = {styles.headerContainer}>
@@ -55,6 +146,7 @@ export default function (props) {
 
                 <TouchableOpacity
                     style = {styles.headerButton}
+                    onPress = {() => props.params.nav.navigate("WindowItem", {date: props.params.date}) }
                 >
                     <Image
                         source = {require('../assets/cart-38-32.png')}
@@ -64,6 +156,7 @@ export default function (props) {
 
                 <TouchableOpacity
                     style = {styles.headerButton}
+                    onPress = {() =>  props.params.nav.navigate("WindowHome")}
                 >
                     <Image
                         source = {require('../assets/view-details-32.png')}
@@ -73,6 +166,7 @@ export default function (props) {
 
                 <TouchableOpacity
                     style = {styles.headerButton}
+                    onPress = {() => deleteDate()}
                 >
                     <Image
                         source = {require('../assets/trash-4-32.png')}
@@ -94,8 +188,24 @@ export default function (props) {
                             renderItem = {({ item }) => (
                                 <TouchableOpacity
                                     style= {styles.itemButton}
+                                    onPress = {() => 
+                                        Alert.alert(
+                                            "Exclusão",
+                                            "Deseja excluir esse produto?",
+                                            [
+                                                {
+                                                    text: "Cancelar",
+                                                    style: 'cancel'
+                                                },
+                                                {
+                                                    text: "Confirmar",
+                                                    onPress : () => deleteItem(item.id)
+                                                }
+                                            ],
+                                            {cancelable: false}
+                                        )
+                                    }
                                 >   
-                                
                                     <Text style = {styles.itemText}>Produto: {item.Name} || QTD: {item.Amount}</Text>
                                 </TouchableOpacity>
                             )}
@@ -165,5 +275,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         padding: 10
-    }
+    },
+
 })

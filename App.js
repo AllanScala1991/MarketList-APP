@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import List from './components/List';
+import Item from './components/Item';
 
 
 //NAVIGATION
@@ -41,10 +42,20 @@ function listRender({route, navigation}) {
   const {date, id} = route.params;
   return(
     <View style={styles.container}>
-      <List params = {{date: date, id: id}}/>
+      <List params = {{date: date, id: id, nav: navigation}}/>
     </View>
   )
 }
+
+function itemRender({route, navigation}) {
+  const date = route.params.date;
+  return(
+    <View style={styles.container}>
+      <Item params = {{date: date, nav: navigation}}/>
+    </View>
+  )
+}
+
 
 export default function App() {
   return (
@@ -53,7 +64,7 @@ export default function App() {
         screenOptions={{
           headerShown: false
         }}
-        initialRouteName = "WindowHome"
+        initialRouteName = "WindowLogin"
       >
           <Windows.Screen
               name = "WindowLogin"
@@ -73,6 +84,11 @@ export default function App() {
           <Windows.Screen
               name = "WindowList"
               component = {listRender}
+          />
+
+          <Windows.Screen
+              name = "WindowItem"
+              component = {itemRender}
           />
 
       </Windows.Navigator>
