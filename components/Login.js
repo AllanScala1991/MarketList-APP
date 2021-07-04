@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from './config';
 
@@ -29,7 +29,17 @@ export default function(props) {
 
         if (!json.status){
 
-            alert(json.message)
+            Alert.alert(
+                "Message",
+                json.message,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
+
 
         }else{
 
@@ -38,7 +48,16 @@ export default function(props) {
         }
 
     } catch (error) {
-        alert(error);
+        Alert.alert(
+            "Message",
+            error,
+            [
+                {
+                    text: "OK"
+                }
+            ],
+            {cancelable: false}
+        )
     }
     
   }
@@ -77,7 +96,7 @@ export default function(props) {
                 style = {styles.button}
                 onPress = {login}
                 >
-                    <Text style = {styles.buttonText}>ACESSAR</Text>
+                    <Text style = {styles.buttonText}>LOGIN</Text>
                 </TouchableOpacity>
             </View>
 
@@ -86,7 +105,7 @@ export default function(props) {
                     style = {styles.button}
                     onPress = {() => props.nav.navigate("WindowRegister")}
                 >
-                    <Text style = {styles.buttonText}>CRIAR CONTA</Text>
+                    <Text style = {styles.buttonText}>CREATE ACCOUNT</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert} from 'react-native';
 import config from './config';
 
 export default function(props) {
@@ -30,7 +30,16 @@ export default function(props) {
     
             let json = await response.json();
     
-            alert(json.message);
+            Alert.alert(
+                "Message",
+                json.message,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
 
             setNewUser("");
 
@@ -39,7 +48,16 @@ export default function(props) {
             setNewEmail("");
     
         } catch (error) {
-            alert(error);
+            Alert.alert(
+                "Message",
+                error,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
         }
     }
 
@@ -80,7 +98,7 @@ export default function(props) {
                         style = {styles.buttonRegister}
                         onPress = {registerUser}
                     >
-                        <Text style = {styles.buttonTextRegister}>SALVAR</Text>
+                        <Text style = {styles.buttonTextRegister}>SAVE</Text>
                     </TouchableOpacity>
                 </View>
                 <View style = {styles.buttonContainer}>
@@ -88,7 +106,7 @@ export default function(props) {
                         style = {styles.buttonRegister}
                         onPress = {() => props.nav.navigate("WindowLogin")}
                     >
-                        <Text style = {styles.buttonTextRegister}>FECHAR</Text>
+                        <Text style = {styles.buttonTextRegister}>CLOSE</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text} from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from './config';
 
@@ -31,14 +31,32 @@ export default function (props) {
     
             let json = await response.json();
     
-            alert(json.message);
+            Alert.alert(
+                "Message",
+                json.message,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
 
             setName("");
 
             setAmount("");
     
         } catch (error) {
-            alert(error);
+            Alert.alert(
+                "Message",
+                error,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
         }
     }
 
@@ -73,7 +91,7 @@ export default function (props) {
                     style = {styles.buttonRegister}
                     onPress = {() => createItem(props.params.date, getName, getAmount)}
                 >
-                    <Text style = {styles.buttonTextRegister}>ADICIONAR</Text>
+                    <Text style = {styles.buttonTextRegister}>CREATE</Text>
                 </TouchableOpacity>
             </View>
 
@@ -82,7 +100,7 @@ export default function (props) {
                     style = {styles.buttonRegister}
                     onPress = {() => props.params.nav.navigate("WindowList")}
                 >
-                    <Text style = {styles.buttonTextRegister}>VOLTAR</Text>
+                    <Text style = {styles.buttonTextRegister}>BACK</Text>
                 </TouchableOpacity>
             </View>
         </View>

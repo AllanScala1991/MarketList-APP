@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, TouchableOpacity, View, Text, Image, FlatList, ActivityIndicator} from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, Image, FlatList, ActivityIndicator, Alert} from 'react-native';
 import { useIsFocused } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from './config';
@@ -77,13 +77,31 @@ export default function (props) {
     
             let json = await response.json();
 
-            alert(json.message);
+            Alert.alert(
+                "Message",
+                json.message,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
 
             refresh();
             
             
         } catch (error) {
-            alert(error);
+            Alert.alert(
+                "Message",
+                error,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
         }
         
     }
@@ -109,7 +127,16 @@ export default function (props) {
     
             if (!json.status){
     
-                alert(json.message)
+                Alert.alert(
+                    "Message",
+                    json.message,
+                    [
+                        {
+                            text: "OK"
+                        }
+                    ],
+                    {cancelable: false}
+                )
                 setData('');
             }else{
                 setData(json.data);
@@ -117,7 +144,16 @@ export default function (props) {
             }
 
         } catch (error) {
-            alert(error)
+            Alert.alert(
+                "Message",
+                error,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
         }
     }
 
@@ -135,7 +171,7 @@ export default function (props) {
                         <Image
                             source = {require('../assets/add-list-24.png')}
                         />
-                        <Text style = {styles.textButton}>NOVA LISTA</Text>
+                        <Text style = {styles.textButton}>NEW LIST</Text>
                 </TouchableOpacity>
             </View>
 

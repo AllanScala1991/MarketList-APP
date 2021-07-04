@@ -66,12 +66,30 @@ export default function (props) {
 
             let json = await response.json();
     
-            alert(json.message);
+            Alert.alert(
+                "Message",
+                json.message,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
 
             props.params.nav.navigate("WindowHome");
     
         } catch (error) {
-            alert(error);
+            Alert.alert(
+                "Message",
+                error,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
         }
     };
 
@@ -95,12 +113,30 @@ export default function (props) {
 
             let json = await response.json();
     
-            alert(json.message);
+            Alert.alert(
+                "Message",
+                json.message,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
 
             refresh();
     
         } catch (error) {
-            alert(error);
+            Alert.alert(
+                "Message",
+                error,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
         }
     };
 
@@ -134,7 +170,16 @@ export default function (props) {
             }
 
         } catch (error) {
-            alert(error)
+            Alert.alert(
+                "Message",
+                error,
+                [
+                    {
+                        text: "OK"
+                    }
+                ],
+                {cancelable: false}
+            )
         }
     };
     
@@ -191,14 +236,14 @@ export default function (props) {
                                     onPress = {() => 
                                         Alert.alert(
                                             "Exclusão",
-                                            "Deseja excluir esse produto?",
+                                            "Do you want to delete this product?",
                                             [
                                                 {
-                                                    text: "Cancelar",
+                                                    text: "Cancel",
                                                     style: 'cancel'
                                                 },
                                                 {
-                                                    text: "Confirmar",
+                                                    text: "Accept",
                                                     onPress : () => deleteItem(item.id)
                                                 }
                                             ],
@@ -206,7 +251,7 @@ export default function (props) {
                                         )
                                     }
                                 >   
-                                    <Text style = {styles.itemText}>Produto: {item.Name} || QTD: {item.Amount}</Text>
+                                    <Text style = {styles.itemText}>Product: {item.Name} || QTD: {item.Amount}</Text>
                                 </TouchableOpacity>
                             )}
                         />
